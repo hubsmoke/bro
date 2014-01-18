@@ -10,7 +10,7 @@ URL = ENV["BROPAGES_URL"] || 'http://bropages.org'
 FILE = ENV["HOME"] + '/.bro'
 
 program :name, 'bro'
-program :version, '0.0.3'
+program :version, '0.0.4'
 program :description, "Highly readable supplement to man pages.\n\nShows simple, concise examples for commands."
  
 default_command :lookup
@@ -51,7 +51,7 @@ command :thanks do |c|
         say e.message
         say "There was a problem thanking the #{cmd} entry. This entry may not exist or bropages.org may be down".colored.yellow.on_red
       else
-        say "You just gave thanks for the top entry for #{cmd}!"
+        say "You just gave thanks to an entry for #{cmd}! You rock!"
         say res
       end
     end
