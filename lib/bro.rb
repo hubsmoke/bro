@@ -27,10 +27,26 @@ command :thanks do |c|
       say "Sorry, you can't do this without email verification".colored.red
     end
     unless login_details.nil?
-      cmd = get_arg_or_last_command args
+      cmd = read_state[:cmd]
+
+      if cmd.nil?
+        say "\nYou must first look up a command before downvoting. For example: bro curl\n\n"
+        return
+      end
+
+      idkey = args[0]
+      if idkey.nil?
+        idkey = "1"
+      end
+      id = read_state[idkey.intern]
+
+      if id.nil?
+        say "\nThat id (#{idkey}) does not exist for #{cmd}, try another one"
+        return
+      end
 
       begin
-        res = RestClient.get URL + "/thanks/#{cmd}", { params: login_details }
+        res = RestClient.get URL + "/thanks/#{id}", { params: login_details }
       rescue => e
         say e.message
         say "There was a problem thanking the #{cmd} entry. This entry may not exist or bropages.org may be down".colored.yellow.on_red
