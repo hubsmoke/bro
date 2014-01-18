@@ -21,18 +21,23 @@ command :thanks do |c|
   c.description = 'Upvote a bro entry. If called without a COMMAND argument, it will upvote the last thing you looked up with bro'
   c.example 'Upvote the bro entry for curl', 'bro thanks curl'
   c.action do |args, options|
-    login_details = check_email
-
-    cmd = get_arg_or_last_command args
-
     begin
-      res = RestClient.get URL + "/thanks/#{cmd}", { params: login_details }
-    rescue => e
-      say e.message
-      say "There was a problem thanking the #{cmd} entry. This entry may not exist or bropages.org may be down"
-    else
-      say "You just gave thanks for the top entry for #{cmd}!"
-      say res
+      login_details = check_email
+    rescue
+      say "Sorry, you can't do this without email verification".colored.red
+    end
+    unless login_details.nil?
+      cmd = get_arg_or_last_command args
+
+      begin
+        res = RestClient.get URL + "/thanks/#{cmd}", { params: login_details }
+      rescue => e
+        say e.message
+        say "There was a problem thanking the #{cmd} entry. This entry may not exist or bropages.org may be down".colored.yellow.on_red
+      else
+        say "You just gave thanks for the top entry for #{cmd}!"
+        say res
+      end
     end
   end
 end
@@ -43,34 +48,40 @@ command :no do |c|
   c.description = 'Downvote a bro entry for the last command you looked up. If called without ID, it will downvote the top entry of the last command you looked up.'
   c.example 'Downvote the bro entry for curl', "bro curl\n\nbro no"
   c.action do |args, options|
-    login_details = check_email
-
-    cmd = read_state[:cmd]
-
-    if cmd.nil?
-      say "\nYou must first look up a command before downvoting. For example: bro curl\n\n"
-      return
-    end
-
-    idkey = args[0]
-    if idkey.nil?
-      idkey = "1"
-    end
-    id = read_state[idkey.intern]
-
-    if id.nil?
-      say "\nThat id (#{idkey}) does not exist for #{cmd}, try another one"
-      return
-    end
-
     begin
-      res = RestClient.get URL + "/no/#{id}", { params: login_details }
-    rescue => e
-      say e.message
-      say "There was a problem downvoting the #{cmd} entry. This entry may not exist or bropages.org may be down"
-    else
-      say "You just downvoted an entry for #{cmd}"
-      say res
+      login_details = check_email
+    rescue
+      say "Sorry, you can't do this without email verification".colored.red
+    end
+    unless login_details.nil?
+
+      cmd = read_state[:cmd]
+
+      if cmd.nil?
+        say "\nYou must first look up a command before downvoting. For example: bro curl\n\n"
+        return
+      end
+
+      idkey = args[0]
+      if idkey.nil?
+        idkey = "1"
+      end
+      id = read_state[idkey.intern]
+
+      if id.nil?
+        say "\nThat id (#{idkey}) does not exist for #{cmd}, try another one"
+        return
+      end
+
+      begin
+        res = RestClient.get URL + "/no/#{id}", { params: login_details }
+      rescue => e
+        say e.message
+        say "There was a problem downvoting the #{cmd} entry. This entry may not exist or bropages.org may be down".colored.yellow.on_red
+      else
+        say "You just downvoted an entry for #{cmd}"
+        say res
+      end
     end
   end
 end
@@ -83,42 +94,49 @@ command :add do |c|
   c.example 'Quickly add an entry for curl', 'bro add curl -m "curl http://google.com"'
   #TODO c.option '-m', 'An optional inline entry. This won\'t trigger a system editor to open'
   c.action do |args, options|
-    login_details = check_email
+    begin
+      login_details = check_email
+    rescue
+      say "Sorry, you can't do this without email verification".colored.red
+    end
 
-    cmd = get_arg_or_last_command args
+    unless login_details.nil?
 
-    if cmd.nil?
-      say "\nYou must enter a COMMAND after 'bro add'. For example: bro add curl\n\n"
-    else
-      prompt = "#~ Bro entry for command '#{cmd}'\n#~ Just provide a few, simple, common case examples for how to use this command\n#~ Comments starting with #~ are removed\n"
-      entry = ask_editor prompt, "vim"
-      if entry.gsub(prompt, '').strip.length > 0
-        if agree "Submit this entry for #{cmd}? [Yn] "
-          say "All right, sending your entry..."
-          begin
-            res = RestClient.post URL + '/', login_details.merge({ entry: { cmd: cmd, msg: entry}, format: 'json', multipart: true })
-          rescue => e
-            say e.message
-            file = "/tmp/#{cmd}.bro"
+      cmd = get_arg_or_last_command args
 
-            # increment file name as to not overwrite anything
-            i = 1
-            while File.exist?(file)
-              file = "/tmp/#{cmd}#{i}.bro"
-              i += 1
-            end
-
-            # write message to file
-            File.open(file, 'w') do |f|
-              f.write entry
-            end
-            say "Woops. There was an error! Your entry was saved to #{file}"
-          else
-            say "Successfully submitted."
-          end
-        end
+      if cmd.nil?
+        say "\nYou must enter a COMMAND after 'bro add'. For example: bro add curl\n\n"
       else
-        say "Canceled. Did not submit entry for '#{cmd}'"
+        prompt = "#~ Bro entry for command '#{cmd}'\n#~ Just provide a few, simple, common case examples for how to use this command\n#~ Comments starting with #~ are removed\n"
+        entry = ask_editor prompt, "vim"
+        if entry.gsub(prompt, '').strip.length > 0
+          if agree "Submit this entry for #{cmd}? [Yn] "
+            say "All right, sending your entry..."
+            begin
+              res = RestClient.post URL + '/', login_details.merge({ entry: { cmd: cmd, msg: entry}, format: 'json', multipart: true })
+            rescue => e
+              say e.message
+              file = "/tmp/#{cmd}.bro"
+
+              # increment file name as to not overwrite anything
+              i = 1
+              while File.exist?(file)
+                file = "/tmp/#{cmd}#{i}.bro"
+                i += 1
+              end
+
+              # write message to file
+              File.open(file, 'w') do |f|
+                f.write entry
+              end
+              say "Woops. There was an error! Your entry was saved to #{file}".colored.yellow.on_red
+            else
+              say "Successfully submitted.".colored.green
+            end
+          end
+        else
+          say "Canceled. Did not submit entry for '#{cmd}'".colored.yellow.on_red
+        end
       end
     end
   end
@@ -174,7 +192,7 @@ command :lookup do |c|
 
             say sep + "\n\n" if i > 1
 
-            say body + "\n"
+            say body + "\n\n"
 
             upstr = "bro thanks"
             upstr += " #{i}" unless isDefault
@@ -213,20 +231,21 @@ def check_email
 end
 
 def prompt_email
-  say "Bropages.org requires an email address verification to do this."
-  say "Your email address and verification code will be saved locally on your machine and used for future bropages.org activity"
+  say "Bropages.org requires an email address verification to do this action".colored.yellow
+  say "Your email address and verification code will be saved locally on your machine to a file called #{"~/.bro".colored.yellow} and used for future bropages.org activity"
   say "When you enter your email, you'll get a verification email with a code. Enter the code when prompted"
   
   email = ""
 
   while is_invalid_email email
-    email = ask "What's your email address?"
+    email = ask "What's your email address?".colored.green
   end
 
   begin
     res = RestClient.post URL + '/users.json', { user: { email: email }, format: 'json', multipart: true }
   rescue => e
-    say "There was an error delivering to your email address. Please try again later"
+    say "There was an error delivering to your email address. Please try again later".colored.yellow.on_red
+    raise e
   else
     say "Great! We're sending an email to #{email}. Enter the verification code below and you'll be all set from now on."
 
@@ -239,7 +258,7 @@ def prompt_email
         say "Great! You're verified! FYI, your email and code are stored locally in ~/.bro"
         write_state({ email: email, code: code })
       rescue => e
-        say "Woops, there was a problem verifying your email. Please try again"
+        say "Woops, there was a problem verifying your email. Please try again".colored.yellow.on_red
       end
     end while invalid_code
   end

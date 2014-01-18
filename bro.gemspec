@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
-  s.name        = 'bro'
-  s.version     = '0.0.1'
+  s.name        = 'bropages'
+  s.version     = '0.0.2'
   s.date        = '2013-12-21'
   s.summary     = "Bro"
   s.description = "Highly readable supplement to man pages. Shows simple, concise examples for unix commands."
