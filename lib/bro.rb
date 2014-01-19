@@ -16,7 +16,7 @@ URL = ENV["BROPAGES_URL"] || 'http://bropages.org'
 FILE = ENV["HOME"] + '/.bro'
 
 program :name, 'bro'
-program :version, '0.0.5'
+program :version, '0.0.6'
 program :description, "Highly readable supplement to man pages.\n\nShows simple, concise examples for commands."
 default_command :lookup
 
@@ -49,7 +49,7 @@ command :thanks do |c|
       id = state.read_state[idkey.intern]
 
       if id.nil?
-        say "\nThat id (#{idkey}) does not exist for #{cmd}, try another one"
+        say "That id (#{idkey}) does not exist for #{cmd}, try another one".sorry
       end
 
       unless id.nil?
@@ -67,11 +67,11 @@ command :thanks do |c|
   end
 end
 
-command :no do |c|
-  c.syntax = 'bro no [ID]'
+command :"...no" do |c|
+  c.syntax = 'bro ...no [ID]'
   c.summary = 'Downvote an entry, bro'
   c.description = 'Downvote a bro entry for the last command you looked up. If called without ID, it will downvote the top entry of the last command you looked up.'
-  c.example 'Downvote the bro entry for curl', "bro curl\n\nbro no"
+  c.example 'Downvote the bro entry for curl', "bro curl\n\nbro ...no"
   c.action do |args, options|
     begin
       login_details = state.check_email
@@ -95,18 +95,19 @@ command :no do |c|
       id = state.read_state[idkey.intern]
 
       if id.nil?
-        say "\nThat id (#{idkey}) does not exist for #{cmd}, try another one".sorry
-        return
+        say "That id (#{idkey}) does not exist for #{cmd}, try another one".sorry
       end
 
-      begin
-        res = RestClient.get URL + "/no/#{id}", { params: login_details }
-      rescue => e
-        say "There was a problem downvoting the #{cmd} entry. This entry may not exist or bropages.org may be down".problem
-        say e
-      else
-        say "You just downvoted an entry for #{cmd}".status
-        say "You rock!".success
+      unless id.nil?
+        begin
+          res = RestClient.get URL + "/no/#{id}", { params: login_details }
+        rescue => e
+          say "There was a problem downvoting the #{cmd} entry. This entry may not exist or bropages.org may be down".problem
+          say e
+        else
+          say "You just downvoted an entry for #{cmd}".status
+          say "You rock!".success
+        end
       end
     end
   end
@@ -193,12 +194,12 @@ command :lookup do |c|
   c.action do |args, options|
     if args.empty?
       say <<-QQQ.unindent
-      \n#{"Bro! Specify a command first!".colored.red}
+      #{"Bro! Specify a command first!".colored.red}
 
-      * For example try #{"bro curl".colored.green}
-
-      * Use #{"bro help".colored.yellow} for more info
-
+      \t* For example try #{"bro curl".colored.green}
+      
+      \t* Use #{"bro help".colored.yellow} for more info
+      
       QQQ
     else
       cmd = args.first
@@ -213,13 +214,13 @@ command :lookup do |c|
       begin
         res = RestClient.get URL + '/' + cmd + '.json'
       rescue => e
-        say <<-QQQ.unindent 
-        \nThe #{cmd.colored.yellow} command isn't in our database
-                
-        * Use #{"bro add".colored.green.underline} to add #{cmd.colored.yellow} to our database!
-
-        * Need help? Visit #{"http://bropages.org/help".colored.underline}
-
+        say <<-QQQ.unindent
+        The #{cmd.colored.yellow} command isn't in our database
+        
+        \t* Use #{"bro add".colored.green.underline} to add #{cmd.colored.yellow} to our database!
+        
+        \t* Need help? Visit #{"http://bropages.org/help".colored.underline}
+        
         QQQ
         error = true
       end
@@ -255,8 +256,8 @@ command :lookup do |c|
 
             upstr = "bro thanks"
             upstr += " #{i}" unless isDefault
-            downstr = "bro no"
-            downstr += " #{i}" unless isDefault
+            downstr = "bro ...no"
+            downstr += "  #{i}" unless isDefault
             downstr += "\t" if isDefault
 
             msg = "\t#{upstr.colored.green}\tto upvote (#{data['up']})\n\t#{downstr.colored.red}\tto downvote (#{data['down']})\n"
