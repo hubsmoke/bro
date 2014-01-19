@@ -121,7 +121,7 @@ command :add do |c|
   c.summary = 'Add an entry, bro'
   c.description = <<-QQQ.unindent
   This adds an entry to the http://bropages.org database.
-
+  
   Called without parameters will add an entry for the last thing you looked up with bro.
   QQQ
   c.example 'Launch your editor to add an entry for curl', 'bro add curl'
@@ -198,11 +198,11 @@ command :lookup do |c|
     if args.empty?
       say <<-QQQ.unindent
       #{"Bro! Specify a command first!".colored.red}
-
+      
       \t* For example try #{"bro curl".colored.green}
-
+      
       \t* Use #{"bro help".colored.yellow} for more info
-
+      
       QQQ
     else
       cmd = args.first
@@ -219,11 +219,11 @@ command :lookup do |c|
       rescue => e
         say <<-QQQ.unindent
         The #{cmd.colored.yellow} command isn't in our database
-
+        
         \t* Use #{"bro add".colored.green.underline} to add #{cmd.colored.yellow} to our database!
-
+        
         \t* Need help? Visit #{"http://bropages.org/help".colored.underline}
-
+        
         QQQ
         error = true
       end
