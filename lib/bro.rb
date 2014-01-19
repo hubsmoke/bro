@@ -42,17 +42,18 @@ command :thanks do |c|
 
       if id.nil?
         say "\nThat id (#{idkey}) does not exist for #{cmd}, try another one"
-        return
       end
 
-      begin
-        res = RestClient.get URL + "/thanks/#{id}", { params: login_details }
-      rescue => e
-        say e.message
-        say "There was a problem thanking the #{cmd} entry. This entry may not exist or bropages.org may be down".colored.yellow.on_red
-      else
-        say "You just gave thanks to an entry for #{cmd}! You rock!"
-        say res
+      unless id.nil?
+        begin
+          res = RestClient.get URL + "/thanks/#{id}", { params: login_details }
+        rescue => e
+          say e.message
+          say "There was a problem thanking the #{cmd} entry. This entry may not exist or bropages.org may be down".colored.yellow.on_red
+        else
+          say "You just gave thanks to an entry for #{cmd}! You rock!"
+          say res
+        end
       end
     end
   end
@@ -123,7 +124,7 @@ command :add do |c|
       if cmd.nil?
         say "\nYou must enter a COMMAND after 'bro add'. For example: bro add curl\n\n"
       else
-        prompt = "#~ Bro entry for command '#{cmd}'\n#~ Just provide a few, simple, common case examples for how to use this command\n#~ Comments starting with #~ are removed\n"
+        prompt = "#~ Bro entry for command '#{cmd}'\n#~ Provide a useful example for how to use '#{cmd}'\n#~ Comments starting with #~ are removed\n\n#~ Example for command 'man':\n#~ #Opens up the manual page for the command 'ls'\n#~ man ls\n\n#~ Remove leading #~ when done:\n#~# [INSERT DESCRIPTION OF EXAMPLE HERE]\n#~[EXAMPLE HERE]"
         entry = ask_editor prompt, "vim"
         if entry.gsub(prompt, '').strip.length > 0
           if agree "Submit this entry for #{cmd}? [Yn] "
