@@ -124,7 +124,7 @@ command :add do |c|
       if cmd.nil?
         say "\nYou must enter a COMMAND after 'bro add'. For example: bro add curl\n\n"
       else
-        prompt = "#~ Bro entry for command '#{cmd}'\n#~ Provide a useful example for how to use '#{cmd}'\n#~ Comments starting with #~ are removed\n\n#~ Example for command 'man':\n#~ #Opens up the manual page for the command 'ls'\n#~ man ls\n\n#~ Remove leading #~ when done:\n#~ # [INSERT DESCRIPTION OF EXAMPLE HERE]\n#~[EXAMPLE HERE]"
+        prompt = "#~ Bro entry for command '#{cmd}'\n#~ Provide a useful example for how to use '#{cmd}'\n#~ Comments starting with #~ are removed\n\n#~ Example for command 'man':\n#~ #Opens up the manual page for the command 'ls'\n#~ man ls\n\n#~ Remove leading #~ when done:\n#~# [INSERT DESCRIPTION OF EXAMPLE HERE]\n#~[EXAMPLE HERE]"
         entry = ask_editor prompt, "vim"
         if entry.gsub(prompt, '').strip.length > 0
           if agree "Submit this entry for #{cmd}? [Yn] "
