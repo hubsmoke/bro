@@ -41,7 +41,7 @@ command :thanks do |c|
       id = read_state[idkey.intern]
 
       if id.nil?
-        say "That id (#{idkey}) does not exist for #{cmd}, try another one"
+        say "\nThat id (#{idkey}) does not exist for #{cmd}, try another one"
       end
 
       unless id.nil?
