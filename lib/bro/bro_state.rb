@@ -25,9 +25,7 @@ module Bro
     end
 
     def prompt_email
-      say "Bropages.org requires an email address verification to do this action".colored.yellow
-      say "Your email address and verification code will be saved locally on your machine to a file called #{"~/.bro".colored.yellow} and used for future bropages.org activity"
-      say "When you enter your email, you'll get a verification email with a code. Enter the code when prompted"
+      say "Bropages.org requires an email address verification to do this".colored.yellow
       
       email = ""
 
@@ -41,7 +39,7 @@ module Bro
         say "There was an error delivering to your email address. Please try again later".colored.yellow.on_red
         raise e
       else
-        say "Great! We're sending an email to #{email}. Enter the verification code below and you'll be all set from now on."
+        say "Great! We're sending an email to #{email}".success
 
         invalid_code = true
         begin
@@ -49,7 +47,7 @@ module Bro
           begin
             is_invalid_code code, email
             invalid_code = false
-            say "Great! You're verified! FYI, your email and code are stored locally in ~/.bro"
+            say "Great! You're verified! FYI, your email and code are stored locally in ~/.bro".success
             write_state({ email: email, code: code })
           rescue => e
             say "Woops, there was a problem verifying your email. Please try again".colored.yellow.on_red

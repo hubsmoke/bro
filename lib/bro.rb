@@ -16,7 +16,7 @@ URL = ENV["BROPAGES_URL"] || 'http://bropages.org'
 FILE = ENV["HOME"] + '/.bro'
 
 program :name, 'bro'
-program :version, '0.0.6'
+program :version, '0.0.7'
 program :description, "Highly readable supplement to man pages.\n\nShows simple, concise examples for commands."
 default_command :lookup
 
@@ -140,7 +140,7 @@ command :add do |c|
       cmd = state.get_arg_or_last_command args
 
       if cmd.nil?
-        say "\nYou must enter a COMMAND after 'bro add'. For example: bro add curl\n\n"
+        say "\nYou must enter a command after #{"bro add".status}.\n\nFor example: #{"bro add".success} #{"curl".success.underline}\n\n"
       else
         prompt = <<-QQQ.unindent
           #~ Bro entry for command '#{cmd}'
@@ -198,11 +198,11 @@ command :lookup do |c|
     if args.empty?
       say <<-QQQ.unindent
       #{"Bro! Specify a command first!".colored.red}
-      
+
       \t* For example try #{"bro curl".colored.green}
-      
+
       \t* Use #{"bro help".colored.yellow} for more info
-      
+
       QQQ
     else
       cmd = args.first
@@ -219,11 +219,11 @@ command :lookup do |c|
       rescue => e
         say <<-QQQ.unindent
         The #{cmd.colored.yellow} command isn't in our database
-        
+
         \t* Use #{"bro add".colored.green.underline} to add #{cmd.colored.yellow} to our database!
-        
+
         \t* Need help? Visit #{"http://bropages.org/help".colored.underline}
-        
+
         QQQ
         error = true
       end
