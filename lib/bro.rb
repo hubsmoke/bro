@@ -42,17 +42,18 @@ command :thanks do |c|
 
       if id.nil?
         say "\nThat id (#{idkey}) does not exist for #{cmd}, try another one"
-        return
       end
 
-      begin
-        res = RestClient.get URL + "/thanks/#{id}", { params: login_details }
-      rescue => e
-        say e.message
-        say "There was a problem thanking the #{cmd} entry. This entry may not exist or bropages.org may be down".colored.yellow.on_red
-      else
-        say "You just gave thanks to an entry for #{cmd}! You rock!"
-        say res
+      unless id.nil?
+        begin
+          res = RestClient.get URL + "/thanks/#{id}", { params: login_details }
+        rescue => e
+          say e.message
+          say "There was a problem thanking the #{cmd} entry. This entry may not exist or bropages.org may be down".colored.yellow.on_red
+        else
+          say "You just gave thanks to an entry for #{cmd}! You rock!"
+          say res
+        end
       end
     end
   end
