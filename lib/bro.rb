@@ -67,7 +67,7 @@ command :thanks do |c|
   end
 end
 
-command :"...no" do |c|
+noblock = lambda { |c|
   c.syntax = 'bro ...no [ID]'
   c.summary = 'Downvote an entry, bro'
   c.description = 'Downvote a bro entry for the last command you looked up. If called without ID, it will downvote the top entry of the last command you looked up.'
@@ -111,7 +111,10 @@ command :"...no" do |c|
       end
     end
   end
-end
+}
+
+command :"...no", &noblock
+command :no, &noblock
 
 command :add do |c|
   c.syntax = 'bro add [COMMAND] [-m MESSAGE]'
@@ -195,7 +198,7 @@ command :lookup do |c|
     if args.empty?
       say <<-QQQ.unindent
       #{"Bro! Specify a command first!".colored.red}
-
+      
       \t* For example try #{"bro curl".colored.green}
       
       \t* Use #{"bro help".colored.yellow} for more info
@@ -260,7 +263,7 @@ command :lookup do |c|
             downstr += "  #{i}" unless isDefault
             downstr += "\t" if isDefault
 
-            msg = "\t#{upstr.colored.green}\tto upvote (#{data['up']})\n\t#{downstr.colored.red}\tto downvote (#{data['down']})\n"
+            msg = "\t#{upstr.colored.green}\tto upvote (#{data['up']})\n\t#{downstr.colored.red}\tto downvote (#{data['down']})"
             if days > 0
               #msg += "\tlast updated\t#{days} days ago"
             end
