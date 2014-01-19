@@ -21,11 +21,6 @@ module Bro
       end
     end
 
-    def reset_lookup_ids
-      # drop all lookup ids
-      write_state read_state().keep_if { |x| !!!(x =~ /\d+/) }, true
-    end
-
     # read the ~/.bro file and return a hash of the values
     def read_state
       obj = {}

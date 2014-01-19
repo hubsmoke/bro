@@ -9,6 +9,11 @@ module Bro
       cmd
     end
 
+    def reset_lookup_ids
+      # drop all lookup ids
+      write_state read_state().keep_if { |x| !!!(x =~ /\d+/) }, true
+    end
+
     def check_email
       begin
         is_invalid_code read_state[:code], read_state[:email]
