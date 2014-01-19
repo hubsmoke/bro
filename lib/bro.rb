@@ -260,8 +260,7 @@ command :lookup do |c|
             upstr = "bro thanks"
             upstr += " #{i}" unless isDefault
             downstr = "bro ...no"
-            downstr += "  #{i}" unless isDefault
-            downstr += "\t" if isDefault
+            downstr += " #{i}" unless isDefault
 
             msg = "\t#{upstr.colored.green}\tto upvote (#{data['up']})\n\t#{downstr.colored.red}\tto downvote (#{data['down']})"
             if days > 0
