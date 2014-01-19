@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.files       = ["lib/bro.rb"]
   s.homepage    = 'http://bropages.org'
   s.executables << 'bro'
-  s.add_runtime_dependency 'json'
+  s.add_runtime_dependency 'json_pure'
   s.add_runtime_dependency 'commander'
   s.add_runtime_dependency 'rest-client'
   s.add_runtime_dependency 'smart_colored'
