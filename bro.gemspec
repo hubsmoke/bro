@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.description = "Highly readable supplement to man pages. Shows simple, concise examples for unix commands."
   s.authors     = ["bropages.org"]
   s.email       = 'info@bropages.org'
-  s.files       = ["lib/bro.rb"]
+  s.files       = ["lib/bro.rb", "lib/bro/state.rb"]
   s.homepage    = 'http://bropages.org'
   s.executables << 'bro'
   s.add_runtime_dependency 'json'
