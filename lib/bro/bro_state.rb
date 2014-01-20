@@ -18,7 +18,6 @@ module Bro
       begin
         is_invalid_code read_state[:code], read_state[:email]
       rescue => e
-        puts e
         prompt_email
       end
       {code: read_state[:code], email: read_state[:email]}
