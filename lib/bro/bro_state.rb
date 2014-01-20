@@ -1,10 +1,10 @@
 module Bro
   class BroState < State
     def get_arg_or_last_command args
-      cmd = args.first
+      cmd = args.join(" ")
       if args.empty?
         state = read_state
-        cmd = state[:cmd]
+        cmd = state[:cmd].strip
       end
       cmd
     end
