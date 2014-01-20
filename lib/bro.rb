@@ -16,7 +16,7 @@ URL = ENV["BROPAGES_URL"] || 'http://bropages.org'
 FILE = ENV["HOME"] + '/.bro'
 
 program :name, 'bro'
-program :version, '0.0.7'
+program :version, '0.0.8'
 program :description, "Highly readable supplement to man pages.\n\nShows simple, concise examples for commands."
 default_command :lookup
 
