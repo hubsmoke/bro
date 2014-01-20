@@ -16,7 +16,7 @@ URL = ENV["BROPAGES_URL"] || 'http://bropages.org'
 FILE = ENV["HOME"] + '/.bro'
 
 program :name, 'bro'
-program :version, '0.0.8'
+program :version, '0.0.7'
 program :description, "Highly readable supplement to man pages.\n\nShows simple, concise examples for commands."
 default_command :lookup
 
@@ -205,7 +205,7 @@ command :lookup do |c|
       
       QQQ
     else
-      cmd = args.first
+      cmd = args.join("%20")
 
       state.reset_lookup_ids()
 
@@ -232,7 +232,7 @@ command :lookup do |c|
         enable_paging
         list = JSON.parse res
         s = list.length == 1 ? 'y' : 'ies'
-        say "#{list.length} entr#{s} for #{cmd}\n".status.underline
+        say "#{list.length} entr#{s} for #{cmd.sub! '%20', ' '}\n".status.underline
 
         sep = ""
         (HighLine::SystemExtensions.terminal_size[0] - 5).times { sep += "." }
