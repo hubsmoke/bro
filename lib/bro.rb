@@ -151,10 +151,9 @@ command :add do |c|
           #~ Example for command 'man':
           #~ # Opens up the manual page for the command 'ls'
           #~ man ls
-          #~
-          
-          # ex
-          cmd
+          #~ 
+          # your_comment_here
+          your_command_here
           QQQ
         entry = ask_editor prompt, "vim"
         if entry.gsub(prompt, '').strip.length > 0
