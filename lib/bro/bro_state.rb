@@ -4,7 +4,7 @@ module Bro
       cmd = args.join(" ")
       if args.empty?
         state = read_state
-        cmd = state[:cmd]
+        cmd = state[:cmd].strip
       end
       cmd
     end

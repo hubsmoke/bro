@@ -16,7 +16,7 @@ URL = ENV["BROPAGES_URL"] || 'http://bropages.org'
 FILE = ENV["HOME"] + '/.bro'
 
 program :name, 'bro'
-program :version, '0.0.7'
+program :version, Gem::Specification::load("bro.gemspec").version.to_s
 program :description, "Highly readable supplement to man pages.\n\nShows simple, concise examples for commands."
 default_command :lookup
 
@@ -205,12 +205,13 @@ command :lookup do |c|
       
       QQQ
     else
+      cmd_display = args.join(" ")
       cmd = args.join("%20")
 
       state.reset_lookup_ids()
 
       # write to ~/.bro file with last command
-      state.write_state({ cmd: cmd })
+      state.write_state({ cmd: cmd_display })
 
       # connect to webservice for entry
       error = false
@@ -218,9 +219,9 @@ command :lookup do |c|
         res = RestClient.get URL + '/' + cmd + '.json'
       rescue => e
         say <<-QQQ.unindent
-        The #{cmd.colored.yellow} command isn't in our database
+        The #{cmd_display.colored.yellow} command isn't in our database
         
-        \t* Use #{"bro add".colored.green.underline} to add #{cmd.colored.yellow} to our database!
+        \t* Use #{"bro add".colored.green.underline} to add #{cmd_display.colored.yellow} to our database!
         
         \t* Need help? Visit #{"http://bropages.org/help".colored.underline}
         
@@ -232,7 +233,7 @@ command :lookup do |c|
         enable_paging
         list = JSON.parse res
         s = list.length == 1 ? 'y' : 'ies'
-        say "#{list.length} entr#{s} for #{cmd.sub! '%20', ' '}\n".status.underline
+        say "#{list.length} entr#{s} for #{cmd_display}\n".status.underline
 
         sep = ""
         (HighLine::SystemExtensions.terminal_size[0] - 5).times { sep += "." }
