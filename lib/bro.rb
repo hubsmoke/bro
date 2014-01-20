@@ -152,7 +152,7 @@ command :add do |c|
           #~ # Opens up the manual page for the command 'ls'
           #~ man ls
           
- 
+          
           # your_comment_here
           your_command_here
           QQQ
