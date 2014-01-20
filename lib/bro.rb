@@ -130,7 +130,7 @@ command :add do |c|
   c.action do |args, options|
     begin
       login_details = state.check_email
-    rescue
+    rescue => e
       say "Sorry, you can't do this without email verification".sorry
       say e
     end
