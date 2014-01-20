@@ -10,13 +10,14 @@ $LOAD_PATH << "."
 require_relative 'bro/state.rb'
 require_relative 'bro/bro_state.rb'
 require_relative 'bro/string_hacks.rb'
+require_relative 'bro/version.rb'
 include Bro
 
 URL = ENV["BROPAGES_URL"] || 'http://bropages.org'
 FILE = ENV["HOME"] + '/.bro'
 
 program :name, 'bro'
-program :version, Gem::Specification::load("bro.gemspec").version.to_s
+program :version, Bro::VERSION
 program :description, "Highly readable supplement to man pages.\n\nShows simple, concise examples for commands."
 default_command :lookup
 

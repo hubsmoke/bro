@@ -1,12 +1,19 @@
+$:.push File.expand_path("../lib", __FILE__)
+require 'bro/version'
+
 Gem::Specification.new do |s|
   s.name        = 'bropages'
-  s.version     = '0.0.9'
+  s.version     = Bro::VERSION
   s.date        = '2013-12-21'
   s.summary     = "Bro"
   s.description = "Highly readable supplement to man pages. Shows simple, concise examples for unix commands."
   s.authors     = ["bropages.org"]
   s.email       = 'info@bropages.org'
-  s.files       = ["lib/bro.rb", "lib/bro/state.rb", "lib/bro/bro_state.rb", "lib/bro/string_hacks.rb"]
+  s.files       = [ "lib/bro.rb", 
+                    "lib/bro/state.rb",
+                    "lib/bro/bro_state.rb",
+                    "lib/bro/string_hacks.rb",
+                    "lib/bro/version.rb"]
   s.homepage    = 'http://bropages.org'
   s.executables << 'bro'
   s.add_runtime_dependency 'json_pure'
