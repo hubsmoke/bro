@@ -151,7 +151,8 @@ command :add do |c|
           #~ Example for command 'man':
           #~ # Opens up the manual page for the command 'ls'
           #~ man ls
-          #~ 
+          
+ 
           # your_comment_here
           your_command_here
           QQQ
