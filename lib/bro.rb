@@ -234,8 +234,12 @@ command :lookup do |c|
         enable_paging
         list = JSON.parse res
         s = list.length == 1 ? 'y' : 'ies'
-        say "#{list.length} entr#{s} for #{cmd_display}\n".status.underline
-
+	puts
+	cmd.sub! '%20', ' '
+        say <<-QQQ.unindent
+	#{"#{list.length} entr#{s} for #{cmd_display}".status.underline} #{"-- submit your own example with \"bro add #{cmd}\"".colored.yellow}
+        QQQ
+	puts
         sep = ""
         (HighLine::SystemExtensions.terminal_size[0] - 5).times { sep += "." }
         sep += "\n"
@@ -272,10 +276,6 @@ command :lookup do |c|
             isDefault = false
         }
 	puts
-	cmd.sub! '%20', ' '
-	say <<-QQQ.unindent
-	#{"Submit your own example with \"bro add #{cmd}\"".colored.yellow}
-        QQQ
       end
     end
   end
