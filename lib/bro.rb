@@ -271,6 +271,11 @@ command :lookup do |c|
             say msg + "\n\n"
             isDefault = false
         }
+	puts
+	cmd.sub! '%20', ' '
+	say <<-QQQ.unindent
+	#{"Submit your own example with \"bro add #{cmd}\"".colored.yellow}
+        QQQ
       end
     end
   end
