@@ -240,6 +240,7 @@ command :lookup do |c|
 	#{"#{list.length} entr#{s} for #{cmd_display}".status.underline} #{"-- submit your own example with \"bro add #{cmd}\"".colored.yellow}
         QQQ
 	puts
+	cmd.sub! ' ', '%20'
         sep = ""
         (HighLine::SystemExtensions.terminal_size[0] - 5).times { sep += "." }
         sep += "\n"
