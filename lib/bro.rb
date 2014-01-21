@@ -242,7 +242,7 @@ command :lookup do |c|
 
         say <<-QQQ.unindent
         #{"#{list.length} entr#{s} for #{cmd_display}".status.underline} #{"-- submit your own example with \"bro add #{cmd_display}\"".colored.yellow}
-
+        
         QQQ
 
         sep = ""
