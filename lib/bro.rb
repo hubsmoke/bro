@@ -206,7 +206,10 @@ command :lookup do |c|
       
       QQQ
     else
+      # the display string for the command
       cmd_display = args.join(" ")
+
+      # the server argument for the command
       cmd = args.join("%20")
 
       state.reset_lookup_ids()
@@ -220,9 +223,11 @@ command :lookup do |c|
         res = RestClient.get URL + '/' + cmd + '.json'
       rescue => e
         say <<-QQQ.unindent
-        The #{cmd_display.colored.yellow} command isn't in our database
+        The #{cmd_display.colored.yellow} command isn't in our database.
         
-        \t* Use #{"bro add".colored.green.underline} to add #{cmd_display.colored.yellow} to our database!
+        \t* Typing #{"bro add".colored.green.underline} will let you add #{cmd_display.colored.yellow} to our database!
+
+        \t* There's nothing to lose by typing #{"bro add".colored.red.underline}, it will just launch an editor with instructions.
         
         \t* Need help? Visit #{"http://bropages.org/help".colored.underline}
         
@@ -234,13 +239,12 @@ command :lookup do |c|
         enable_paging
         list = JSON.parse res
         s = list.length == 1 ? 'y' : 'ies'
-	puts
-	cmd.sub! '%20', ' '
+
         say <<-QQQ.unindent
-	#{"#{list.length} entr#{s} for #{cmd_display}".status.underline} #{"-- submit your own example with \"bro add #{cmd}\"".colored.yellow}
+        #{"#{list.length} entr#{s} for #{cmd_display}".status.underline} #{"-- submit your own example with \"bro add #{cmd_display}\"".colored.yellow}
+
         QQQ
-	puts
-	cmd.sub! ' ', '%20'
+
         sep = ""
         (HighLine::SystemExtensions.terminal_size[0] - 5).times { sep += "." }
         sep += "\n"
@@ -260,7 +264,7 @@ command :lookup do |c|
 
             body = body.gsub(/^([^#][^\n]*)$/, "\\1".important)
 
-            say sep + "\n\n" if i > 1
+            say sep + "\n" if i > 1
 
             say body + "\n\n"
 
@@ -276,7 +280,7 @@ command :lookup do |c|
             say msg + "\n\n"
             isDefault = false
         }
-	puts
+
       end
     end
   end
