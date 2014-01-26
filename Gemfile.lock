@@ -1,19 +1,12 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    bropages (0.0.15)
-      commander
-      highline
-      json_pure
-      rest-client
-      smart_colored
     commander (4.1.5)
       highline (~> 1.6.11)
     diff-lcs (1.2.5)
     highline (1.6.20)
-    json_pure (1.5.4)
-      spruz (~> 0.2.8)
     mime-types (2.0)
+    rake (10.1.0)
     rest-client (1.6.7)
       mime-types (>= 1.16)
     rspec (2.14.1)
@@ -25,14 +18,13 @@ GEM
       diff-lcs (>= 1.1.3, < 2.0)
     rspec-mocks (2.14.4)
     smart_colored (1.1.1)
-    spruz (0.2.13)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  bropages
   commander (= 4.1.5)
+  rake
   rest-client
   rspec
   smart_colored
