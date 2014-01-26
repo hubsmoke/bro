@@ -5,6 +5,7 @@ rvm:
 branches:
   only:
     - examples
+    - f/colour_switch
 gemfile: Gemfile
 notifications:
   recipients:
