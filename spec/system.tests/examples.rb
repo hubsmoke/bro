@@ -24,7 +24,7 @@ describe "Basic examples" do
   end
 
   it "you can turn color off" do
-    pending "This is done smart_colored gem. Currently no way to configure it off."
+    pending "Just need a switch, then we can choose between VanillaText and ColoredText"
   end
 end
 
