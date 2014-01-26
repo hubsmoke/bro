@@ -198,7 +198,7 @@ command :lookup do |c|
   c.example 'Look up the bro entries for curl', 'bro curl'
   c.option '--no-color', 'Switch colored output OFF'
   c.action do |args, options|
-    if false == options.no_color.nil?
+    unless options.no_color.nil?
       VanillaText.apply
     else
       ColoredText.apply
