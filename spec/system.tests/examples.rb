@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-module BroDsl
+module BroSystemTest
   def bro(command)
     BroCli.run command
   end
 end
 
 describe "Basic examples" do
-  include BroDsl
+  include BroSystemTest
 
   it "can ask about curl for example" do
     result = bro "curl" 
