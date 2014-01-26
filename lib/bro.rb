@@ -3,7 +3,6 @@ require 'rubygems'
 require 'json'
 require 'commander/import'
 require 'highline'
-require 'smart_colored'
 require 'rest-client'
 
 $LOAD_PATH << "."
