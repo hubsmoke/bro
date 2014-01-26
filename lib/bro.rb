@@ -33,7 +33,7 @@ command :thanks do |c|
   c.syntax = "#{BRO_OR_SIS} thanks [COMMAND]"
   c.summary = "Upvote an entry, #{BRO_OR_SIS}"
   c.description = "Upvote a #{BRO_OR_SIS} entry. If called without a COMMAND argument, it will upvote the last thing you looked up with #{BRO_OR_SIS}"
-  c.example "Upvote the #{BRO_OR_SIS} entry for curl", '#{BRO_OR_SIS} thanks curl'
+  c.example "Upvote the #{BRO_OR_SIS} entry for curl", "#{BRO_OR_SIS} thanks curl"
   c.action do |args, options|
     begin
       login_details = state.check_email
