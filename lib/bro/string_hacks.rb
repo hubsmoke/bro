@@ -1,3 +1,33 @@
+class FakeColor
+  def underline; end
+
+  %w{ red green yellow blue }.each do |m|
+    define_method(m){ }
+  end
+end
+
+class VanillaText
+  class << self
+    def apply
+      String.class_eval do
+        def colored
+          FakeColor.new
+        end
+          
+        def unindent 
+          gsub(/^#{scan(/^\s*/).min_by{|l|l.length}}/, "")
+        end
+      end
+
+      %w{ status success problem sorry important underline }.each do |m|
+        String.class_eval do
+          define_method(m){ self }
+        end
+      end
+    end
+  end
+end
+
 class ColoredText
   class << self 
     def apply
