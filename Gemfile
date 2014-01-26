@@ -7,3 +7,7 @@ gem "rest-client"
 group :development do
   gem 'rspec'
 end 
+
+group :system_test do
+  gem 'bropages'
+end 

@@ -29,7 +29,7 @@ end
 class BroCli
   class << self
     def run(command)
-      ColourBlind.strip `ruby bin/bro #{command}`
+      ColourBlind.strip `bro #{command}`
     end
   end
 end
