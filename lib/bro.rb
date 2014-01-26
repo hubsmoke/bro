@@ -22,6 +22,8 @@ default_command :lookup
 
 state = Bro::BroState.new({:file => FILE})
 
+ColoredText.apply
+
 command :thanks do |c|
   c.syntax = 'bro thanks [COMMAND]'
   c.summary = 'Upvote an entry, bro'
