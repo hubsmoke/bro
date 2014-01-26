@@ -20,7 +20,7 @@ describe "Basic examples" do
 
     result = bro an_unknown_command 
 
-    expect(result).to match /The #{an_unknown_command} command isn't in our database/
+    expect(result).to match /The #{an_unknown_command} command isn\'t in our database/
   end
 
   it "you can turn color off" do
