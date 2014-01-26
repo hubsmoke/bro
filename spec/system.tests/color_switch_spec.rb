@@ -14,4 +14,6 @@ describe "The color switch" do
     result = bro ""
     expect(result).to match any_ansi_escape_sequence
   end
+
+  it "might be nice to cache the switch on disk in case you never want color"
 end
