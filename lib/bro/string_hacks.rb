@@ -1,8 +1,8 @@
 class FakeColor
-  def underline; end
+  def initialize(text); @text = text; end
 
-  %w{ red green yellow blue }.each do |m|
-    define_method(m){ }
+  %w{ red green yellow blue underline }.each do |m|
+    define_method(m){ @text }
   end
 end
 
@@ -11,7 +11,7 @@ class VanillaText
     def apply
       String.class_eval do
         def colored
-          FakeColor.new
+          FakeColor.new self
         end
           
         def unindent 

@@ -10,7 +10,7 @@ describe "Basic examples" do
   include BroSystemTest
 
   it "can ask about curl for example" do
-    result = ColourBlind.strip(bro "curl")
+    result = bro "curl"
 
     expect(result).to match /[\d+] entries for curl/
   end
@@ -28,7 +28,10 @@ describe "Basic examples" do
     expect(result).to match /[\d+] entries for curl/
   end
 
-  it "defaults to color on"
+  it "defaults to color on" do
+    result = bro "curl"
+    expect(result).to match /[\d+] entries for curl/
+  end
 end
 
 class BroCli
@@ -36,7 +39,7 @@ class BroCli
     def run(command)
       exe = File.join ".", "spec", "system.tests", "bin", "bro"
       
-      `bundle exec ruby #{exe} #{command}`
+      `#{exe} #{command}`
     end
   end
 end
