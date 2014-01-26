@@ -15,8 +15,14 @@ include Bro
 
 URL = ENV["BROPAGES_URL"] || 'http://bropages.org'
 FILE = ENV["HOME"] + '/.bro'
+BRO_OR_SIS = if $PROGRAM_NAME =~ /sis$/
+               "sis"
+             else
+               "bro"
+             end
+BRO_OR_SIS_CAPITALIZED = BRO_OR_SIS.capitalize
 
-program :name, 'bro'
+program :name, BRO_OR_SIS
 program :version, Bro::VERSION
 program :description, "Highly readable supplement to man pages.\n\nShows simple, concise examples for commands."
 default_command :lookup
@@ -24,10 +30,10 @@ default_command :lookup
 state = Bro::BroState.new({:file => FILE})
 
 command :thanks do |c|
-  c.syntax = 'bro thanks [COMMAND]'
-  c.summary = 'Upvote an entry, bro'
-  c.description = 'Upvote a bro entry. If called without a COMMAND argument, it will upvote the last thing you looked up with bro'
-  c.example 'Upvote the bro entry for curl', 'bro thanks curl'
+  c.syntax = "#{BRO_OR_SIS} thanks [COMMAND]"
+  c.summary = "Upvote an entry, #{BRO_OR_SIS}"
+  c.description = "Upvote a #{BRO_OR_SIS} entry. If called without a COMMAND argument, it will upvote the last thing you looked up with #{BRO_OR_SIS}"
+  c.example "Upvote the #{BRO_OR_SIS} entry for curl", '#{BRO_OR_SIS} thanks curl'
   c.action do |args, options|
     begin
       login_details = state.check_email
@@ -39,7 +45,7 @@ command :thanks do |c|
       cmd = state.read_state[:cmd]
 
       if cmd.nil?
-        say "\nYou must first look up a command before downvoting. For example: bro curl\n\n".sorry
+        say "\nYou must first look up a command before downvoting. For example: #{BRO_OR_SIS} curl\n\n".sorry
         return
       end
 
@@ -69,10 +75,10 @@ command :thanks do |c|
 end
 
 noblock = lambda { |c|
-  c.syntax = 'bro ...no [ID]'
-  c.summary = 'Downvote an entry, bro'
-  c.description = 'Downvote a bro entry for the last command you looked up. If called without ID, it will downvote the top entry of the last command you looked up.'
-  c.example 'Downvote the bro entry for curl', "bro curl\n\nbro ...no"
+  c.syntax = "#{BRO_OR_SIS} ...no [ID]"
+  c.summary = "Downvote an entry, #{BRO_OR_SIS}"
+  c.description = "Downvote a #{BRO_OR_SIS} entry for the last command you looked up. If called without ID, it will downvote the top entry of the last command you looked up."
+  c.example "Downvote the #{BRO_OR_SIS} entry for curl", "#{BRO_OR_SIS} curl\n\n#{BRO_OR_SIS} ...no"
   c.action do |args, options|
     begin
       login_details = state.check_email
@@ -85,7 +91,7 @@ noblock = lambda { |c|
       cmd = state.read_state[:cmd]
 
       if cmd.nil?
-        say "\nYou must first look up a command before downvoting. For example: bro curl\n\n".sorry
+        say "\nYou must first look up a command before downvoting. For example: #{BRO_OR_SIS} curl\n\n".sorry
         return
       end
 
@@ -118,15 +124,15 @@ command :"...no", &noblock
 command :no, &noblock
 
 command :add do |c|
-  c.syntax = 'bro add [COMMAND] [-m MESSAGE]'
-  c.summary = 'Add an entry, bro'
+  c.syntax = "#{BRO_OR_SIS} add [COMMAND] [-m MESSAGE]"
+  c.summary = "Add an entry, #{BRO_OR_SIS}"
   c.description = <<-QQQ.unindent
   This adds an entry to the http://bropages.org database.
   
-  Called without parameters will add an entry for the last thing you looked up with bro.
+  Called without parameters will add an entry for the last thing you looked up with #{BRO_OR_SIS}.
   QQQ
-  c.example 'Launch your editor to add an entry for curl', 'bro add curl'
-  c.example 'Quickly add an entry for curl', 'bro add curl -m "curl http://google.com"'
+  c.example 'Launch your editor to add an entry for curl', "#{BRO_OR_SIS} add curl"
+  c.example 'Quickly add an entry for curl', BRO_OR_SIS + ' add curl -m "curl http://google.com"'
   # TODO c.option '-m', 'An optional inline entry. This won\'t trigger a system editor to open'
   c.action do |args, options|
     begin
@@ -141,10 +147,10 @@ command :add do |c|
       cmd = state.get_arg_or_last_command args
 
       if cmd.nil?
-        say "\nYou must enter a command after #{"bro add".status}.\n\nFor example: #{"bro add".success} #{"curl".success.underline}\n\n"
+        say "\nYou must enter a command after #{BRO_OR_SIS + " add".status}.\n\nFor example: #{BRO_OR_SIS + " add".success} #{"curl".success.underline}\n\n"
       else
         prompt = <<-QQQ.unindent
-          #~ Bro entry for command '#{cmd}'
+          #~ #{BRO_OR_SIS_CAPITALIZED} entry for command '#{cmd}'
           #~ Provide a useful example for how to use '#{cmd}'
           #~ Comments starting with #~ are removed
           #~
@@ -191,18 +197,18 @@ command :add do |c|
 end
 
 command :lookup do |c|
-  c.syntax = 'bro [COMMAND]'
-  c.summary = 'Lookup an entry, bro. Or just call bro [COMMAND]'
+  c.syntax = "#{BRO_OR_SIS} [COMMAND]"
+  c.summary = "Lookup an entry, #{BRO_OR_SIS}. Or just call #{BRO_OR_SIS} [COMMAND]"
   c.description = "This looks up entries in the http://bropages.org database."
-  c.example 'Look up the bro entries for curl', 'bro curl'
+  c.example "Look up the #{BRO_OR_SIS} entries for curl", "#{BRO_OR_SIS} curl"
   c.action do |args, options|
     if args.empty?
       say <<-QQQ.unindent
-      #{"Bro! Specify a command first!".colored.red}
+      #{"#{BRO_OR_SIS_CAPITALIZED}! Specify a command first!".colored.red}
       
-      \t* For example try #{"bro curl".colored.green}
+      \t* For example try #{BRO_OR_SIS + " curl".colored.green}
       
-      \t* Use #{"bro help".colored.yellow} for more info
+      \t* Use #{BRO_OR_SIS + " help".colored.yellow} for more info
       
       QQQ
     else
@@ -225,9 +231,9 @@ command :lookup do |c|
         say <<-QQQ.unindent
         The #{cmd_display.colored.yellow} command isn't in our database.
         
-        \t* Typing #{"bro add".colored.green.underline} will let you add #{cmd_display.colored.yellow} to our database!
+        \t* Typing #{BRO_OR_SIS + " add".colored.green.underline} will let you add #{cmd_display.colored.yellow} to our database!
 
-        \t* There's nothing to lose by typing #{"bro add".colored.red.underline}, it will just launch an editor with instructions.
+        \t* There's nothing to lose by typing #{BRO_OR_SIS + " add".colored.red.underline}, it will just launch an editor with instructions.
         
         \t* Need help? Visit #{"http://bropages.org/help".colored.underline}
         
@@ -241,7 +247,7 @@ command :lookup do |c|
         s = list.length == 1 ? 'y' : 'ies'
 
         say <<-QQQ.unindent
-        #{"#{list.length} entr#{s} for #{cmd_display}".status.underline} #{"-- submit your own example with \"bro add #{cmd_display}\"".colored.yellow}
+        #{"#{list.length} entr#{s} for #{cmd_display}".status.underline} #{"-- submit your own example with \"#{BRO_OR_SIS} add #{cmd_display}\"".colored.yellow}
         
         QQQ
 
@@ -268,9 +274,9 @@ command :lookup do |c|
 
             say body + "\n\n"
 
-            upstr = "bro thanks"
+            upstr = "#{BRO_OR_SIS} thanks"
             upstr += " #{i}" unless isDefault
-            downstr = "bro ...no"
+            downstr = "#{BRO_OR_SIS} ...no"
             downstr += " #{i}" unless isDefault
 
             msg = "\t#{upstr.colored.green}\tto upvote (#{data['up']})\n\t#{downstr.colored.red}\tto downvote (#{data['down']})"

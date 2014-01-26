@@ -16,6 +16,7 @@ Gem::Specification.new do |s|
                     "lib/bro/version.rb"]
   s.homepage    = 'http://bropages.org'
   s.executables << 'bro'
+  s.executables << 'sis'
   s.add_runtime_dependency 'json_pure', '1.8.1'
   s.add_runtime_dependency 'commander', '4.1.5'
   s.add_runtime_dependency 'rest-client'
