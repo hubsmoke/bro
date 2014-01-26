@@ -23,13 +23,16 @@ describe "Basic examples" do
     expect(result).to match /The #{an_unknown_command} command isn't in our database/
   end
 
-  it "you can turn color off"
+  it "you can turn color off" do
+    pending "This is done smart_colored gem. Currently no way to configure it off."
+  end
 end
 
 class BroCli
   class << self
     def run(command)
-      ColourBlind.strip `bro #{command}`
+      path = File.join ".", "spec", "system.tests", "bin", "bro"
+      ColourBlind.strip `#{path} #{command}`
     end
   end
 end
