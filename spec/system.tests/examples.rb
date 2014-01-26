@@ -1,8 +1,16 @@
 require 'spec_helper'
 
+module BroDsl
+  def bro(command)
+    BroCli.run command
+  end
+end
+
 describe "Basic examples" do
+  include BroDsl
+
   it "can ask about curl for example" do
-    result = BroCli.run "curl"
+    result = bro "curl" 
 
     expect(result).to match /[\d+] entries for curl/
   end
