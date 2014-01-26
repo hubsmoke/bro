@@ -1,4 +1,3 @@
 #!/usr/bin/env ruby
 $LOAD_PATH.unshift File.expand_path(File.join("..", "bro", "lib"))
-
 require 'bro'

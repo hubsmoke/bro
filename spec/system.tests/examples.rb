@@ -10,7 +10,7 @@ describe "Basic examples" do
   include BroSystemTest
 
   it "can ask about curl for example" do
-    result = ColourBlind.strip(bro "curl")
+    result = bro "curl" 
 
     expect(result).to match /[\d+] entries for curl/
   end
@@ -18,7 +18,7 @@ describe "Basic examples" do
   it "tells me when there is no manual for a command" do
     an_unknown_command = "xxx_unknown_command_xxx" 
 
-    result = ColourBlind.strip(bro an_unknown_command)
+    result = bro an_unknown_command 
 
     expect(result).to match /The #{an_unknown_command} command isn\'t in our database/
   end
@@ -27,16 +27,13 @@ describe "Basic examples" do
     result = bro "curl --no-color" 
     expect(result).to match /[\d+] entries for curl/
   end
-
-  it "defaults to color on"
 end
 
 class BroCli
   class << self
     def run(command)
-      exe = File.join ".", "spec", "system.tests", "bin", "bro"
-      
-      `bundle exec ruby #{exe} #{command}`
+      path = File.join ".", "spec", "system.tests", "bin", "bro"
+      ColourBlind.strip `#{path} #{command}`
     end
   end
 end

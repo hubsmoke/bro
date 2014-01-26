@@ -196,7 +196,14 @@ command :lookup do |c|
   c.summary = 'Lookup an entry, bro. Or just call bro [COMMAND]'
   c.description = "This looks up entries in the http://bropages.org database."
   c.example 'Look up the bro entries for curl', 'bro curl'
+  c.option '--no-color', 'Switch colored output OFF'
   c.action do |args, options|
+    if false == options.no_color.nil?
+      VanillaText.apply
+    else
+      ColoredText.apply
+    end
+
     if args.empty?
       say <<-QQQ.unindent
       #{"Bro! Specify a command first!".colored.red}
