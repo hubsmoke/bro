@@ -55,7 +55,7 @@ command :thanks do |c|
 
       unless id.nil?
         begin
-          res = RestClient.get URL + "/thanks/#{id}", { params: login_details }
+          RestClient.get URL + "/thanks/#{id}", { params: login_details }
         rescue => e
           say e.message
           say "There was a problem thanking the #{cmd} entry. This entry may not exist or bropages.org may be down".problem
@@ -101,7 +101,7 @@ noblock = lambda { |c|
 
       unless id.nil?
         begin
-          res = RestClient.get URL + "/no/#{id}", { params: login_details }
+          RestClient.get URL + "/no/#{id}", { params: login_details }
         rescue => e
           say "There was a problem downvoting the #{cmd} entry. This entry may not exist or bropages.org may be down".problem
           say e
@@ -156,12 +156,12 @@ command :add do |c|
           # your_comment_here
           your_command_here
           QQQ
-        entry = ask_editor prompt, "vim"
-        if entry.gsub(prompt, '').strip.length > 0
+        entry = ask_editor prompt
+        if !entry.nil? && entry.gsub(prompt, '').strip.length > 0
           if agree "Submit this entry for #{cmd}? [Yn] "
             say "All right, sending your entry...".status
             begin
-              res = RestClient.post URL + '/', login_details.merge({ entry: { cmd: cmd, msg: entry}, format: 'json', multipart: true })
+              RestClient.post URL + '/', login_details.merge({ entry: { cmd: cmd, msg: entry}, format: 'json', multipart: true })
             rescue => e
               say e.message
               file = "/tmp/#{cmd}.bro"
