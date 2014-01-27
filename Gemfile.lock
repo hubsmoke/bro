@@ -1,0 +1,28 @@
+PATH
+  remote: .
+  specs:
+    bropages (0.0.16)
+      commander (= 4.1.5)
+      highline (= 1.6.20)
+      json_pure (= 1.8.1)
+      mime-types (= 1.19)
+      rest-client
+      smart_colored
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    commander (4.1.5)
+      highline (~> 1.6.11)
+    highline (1.6.20)
+    json_pure (1.8.1)
+    mime-types (1.19)
+    rest-client (1.6.7)
+      mime-types (>= 1.16)
+    smart_colored (1.1.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bropages!

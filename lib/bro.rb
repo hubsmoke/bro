@@ -195,6 +195,7 @@ command :lookup do |c|
   c.summary = 'Lookup an entry, bro. Or just call bro [COMMAND]'
   c.description = "This looks up entries in the http://bropages.org database."
   c.example 'Look up the bro entries for curl', 'bro curl'
+  c.option "-a", "--all", "Show all results"
   c.action do |args, options|
     if args.empty?
       say <<-QQQ.unindent
@@ -203,6 +204,8 @@ command :lookup do |c|
       \t* For example try #{"bro curl".colored.green}
       
       \t* Use #{"bro help".colored.yellow} for more info
+
+      \t* If you want to see all the results for your search, pass #{"--all".colored.yellow}.
       
       QQQ
     else
@@ -221,7 +224,7 @@ command :lookup do |c|
       error = false
       begin
         res = RestClient.get URL + '/' + cmd + '.json'
-      rescue
+      rescue => _
         say <<-QQQ.unindent
         The #{cmd_display.colored.yellow} command isn't in our database.
         
@@ -237,7 +240,8 @@ command :lookup do |c|
 
       unless error
         enable_paging
-        list = JSON.parse res
+        all_results = JSON.parse res
+        list = options.all ? all_results : all_results.take(1)
         s = list.length == 1 ? 'y' : 'ies'
 
         say <<-QQQ.unindent
@@ -249,10 +253,9 @@ command :lookup do |c|
         (HighLine::SystemExtensions.terminal_size[0] - 5).times { sep += "." }
         sep += "\n"
 
-        i = 0
         isDefault = true
-        list.each {|data|
-            i += 1
+        list.each.with_index {|data, ik|
+            i = ik + 1
 
             obj = {}
             obj["#{i}"] = data['id']
