@@ -157,7 +157,7 @@ command :add do |c|
           your_command_here
           QQQ
         entry = ask_editor prompt
-        if entry.gsub(prompt, '').strip.length > 0
+        if !entry.nil? && entry.gsub(prompt, '').strip.length > 0
           if agree "Submit this entry for #{cmd}? [Yn] "
             say "All right, sending your entry...".status
             begin
