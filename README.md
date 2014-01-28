@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/hubsmoke/bro.png)](https://travis-ci.org/hubsmoke/bro)
+
 THE BRO IDEA
 =======
 
@@ -13,5 +15,3 @@ THE WEB
 -----------
 
 The server is at http://bropages.org
-
-The server provides a REST API for CRUD of bro entries and upvotes
