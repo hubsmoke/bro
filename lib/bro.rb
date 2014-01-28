@@ -21,8 +21,6 @@ require_relative 'bro/bro_state.rb'
 require_relative 'bro/string_hacks.rb'
 require_relative 'bro/version.rb'
 
-#trap("SIGINT") { clean up; exit}
-
 URL = ENV["BROPAGES_URL"] || 'http://bropages.org'
 FILE = ENV["HOME"] + '/.bro'
 RestClient.proxy = ENV['http_proxy']
