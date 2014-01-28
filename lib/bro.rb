@@ -1,4 +1,14 @@
 #!/usr/bin/env ruby
+
+# 1.8.7 support
+unless Kernel.respond_to?(:require_relative)
+  module Kernel
+    def require_relative(path)
+      require File.join(File.dirname(caller[0]), path.to_str)
+    end
+  end
+end
+
 require 'rubygems'
 require 'json'
 require 'commander/import'
@@ -6,7 +16,6 @@ require 'highline'
 require 'smart_colored'
 require 'rest-client'
 
-$LOAD_PATH << "."
 require_relative 'bro/state.rb'
 require_relative 'bro/bro_state.rb'
 require_relative 'bro/string_hacks.rb'
@@ -56,7 +65,7 @@ command :thanks do |c|
 
       unless id.nil?
         begin
-          RestClient.get URL + "/thanks/#{id}", { params: login_details }
+          RestClient.get URL + "/thanks/#{id}", { :params => login_details }
         rescue => e
           say e.message
           say "There was a problem thanking the #{cmd} entry. This entry may not exist or bropages.org may be down".problem
@@ -102,7 +111,7 @@ noblock = lambda { |c|
 
       unless id.nil?
         begin
-          RestClient.get URL + "/no/#{id}", { params: login_details }
+          RestClient.get URL + "/no/#{id}", { :params => login_details }
         rescue => e
           say "There was a problem downvoting the #{cmd} entry. This entry may not exist or bropages.org may be down".problem
           say e
@@ -162,7 +171,7 @@ command :add do |c|
           if agree "Submit this entry for #{cmd}? [Yn] "
             say "All right, sending your entry...".status
             begin
-              RestClient.post URL + '/', login_details.merge({ entry: { cmd: cmd, msg: entry}, format: 'json', multipart: true })
+              RestClient.post URL + '/', login_details.merge({ :entry => { :cmd => cmd, :msg => entry}, :format => 'json', :multipart => true })
             rescue => e
               say e.message
               file = "/tmp/#{cmd}.bro"
@@ -216,7 +225,7 @@ command :lookup do |c|
       state.reset_lookup_ids()
 
       # write to ~/.bro file with last command
-      state.write_state({ cmd: cmd_display })
+      state.write_state({ :cmd => cmd_display })
 
       # connect to webservice for entry
       error = false

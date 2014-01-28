@@ -11,7 +11,8 @@ module Bro
 
     def reset_lookup_ids
       # drop all lookup ids
-      write_state read_state().keep_if { |x| !!!(x =~ /\d+/) }, true
+      new_state = read_state().delete_if { |k, v| !!(k =~ /\d+/) }
+      write_state(new_state, true)
     end
 
     def check_email
@@ -20,7 +21,7 @@ module Bro
       rescue => e
         prompt_email
       end
-      {code: read_state[:code], email: read_state[:email]}
+      { :code => read_state[:code], :email => read_state[:email]}
     end
 
     def prompt_email
@@ -34,7 +35,7 @@ module Bro
 
       begin
         email_param = CGI.escape(email)
-        res = RestClient.post URL + '/users.json', { user: { email: email_param }, format: 'json', multipart: true }
+        res = RestClient.post URL + '/users.json', { :user => { :email => email_param }, :format => 'json', :multipart => true }
       rescue => e
         say "There was an error delivering to your email address. Please try again later".colored.yellow.on_red
         raise e
@@ -48,7 +49,7 @@ module Bro
             is_invalid_code code, email
             invalid_code = false
             say "Great! You're verified! FYI, your email and code are stored locally in ~/.bro".success
-            write_state({ email: email, code: code })
+            write_state({ :email => email, :code => code })
           rescue => e
             say "Woops, there was a problem verifying your email. Please try again".colored.yellow.on_red
           end
