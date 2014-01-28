@@ -10,10 +10,12 @@ describe "The color switch" do
     expect(result).to_not match any_ansi_escape_sequence 
   end
 
-  it "defaults to color on" do
-    result = bro ""
+  it "you can turn color on" do
+    result = bro "--with-color"
     expect(result).to match any_ansi_escape_sequence
   end
 
-  it "might be nice to cache the switch on disk in case you never want color"
+  it "caches the switch in case you don't want color"
+
+  it "defaults to color output"
 end
