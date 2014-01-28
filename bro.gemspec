@@ -21,5 +21,5 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'rest-client'
   s.add_runtime_dependency 'smart_colored'
   s.add_runtime_dependency 'highline', '1.6.20'
-  s.add_runtime_dependency 'mime-types', '1.19'
+  s.add_runtime_dependency 'mime-types', '~> 1.19.0'
 end
