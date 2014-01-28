@@ -1,2 +1,4 @@
 *.gem
 
+.rspec
+.rvmrc

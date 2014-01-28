@@ -1,5 +1,13 @@
 module Bro
   class BroState < State
+    COLOR_OFF = "nocolor"
+
+    # true/false if color should be used
+    def check_color
+      state = read_state
+      return state[:color] != COLOR_OFF
+    end
+
     def get_arg_or_last_command args
       cmd = args.join(" ")
       if args.empty?

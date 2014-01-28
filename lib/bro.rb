@@ -13,7 +13,6 @@ require 'rubygems'
 require 'json'
 require 'commander/import'
 require 'highline'
-require 'smart_colored'
 require 'rest-client'
 
 require_relative 'bro/state.rb'
@@ -31,6 +30,12 @@ program :description, "Highly readable supplement to man pages.\n\nShows simple,
 default_command :lookup
 
 state = Bro::BroState.new({:file => FILE})
+
+if state.check_color
+  ColoredText.apply
+else
+  VanillaText.apply
+end
 
 command :thanks do |c|
   c.syntax = 'bro thanks [COMMAND]'
@@ -201,7 +206,20 @@ command :lookup do |c|
   c.summary = 'Lookup an entry, bro. Or just call bro [COMMAND]'
   c.description = "This looks up entries in the http://bropages.org database."
   c.example 'Look up the bro entries for curl', 'bro curl'
+  c.option '--no-color', 'Switch colored output OFF'
+  c.option '--with-color', 'Switch colored output ON'
   c.action do |args, options|
+    unless options.no_color.nil?
+      # set no-color as default
+      state.write_state({ :color => Bro::BroState::COLOR_OFF })
+      VanillaText.apply
+    end
+    unless options.with_color.nil?
+      # set color as default
+      state.write_state({ :color => "" })
+      ColoredText.apply
+    end
+
     if args.empty?
       say <<-QQQ.unindent
       #{"Bro! Specify a command first!".colored.red}
