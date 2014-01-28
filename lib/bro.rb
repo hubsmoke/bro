@@ -42,7 +42,7 @@ command :thanks do |c|
   c.action do |args, options|
     begin
       login_details = state.check_email
-    rescue
+    rescue Interrupt, StandardError
       say "Sorry, you can't do this without email verification".sorry
     end
     unless login_details.nil?
@@ -86,9 +86,8 @@ noblock = lambda { |c|
   c.action do |args, options|
     begin
       login_details = state.check_email
-    rescue
+    rescue Interrupt, StandardError
       say "Sorry, you can't do this without email verification".sorry
-      say "#{e}"
     end
     unless login_details.nil?
 
