@@ -15,6 +15,7 @@ include Bro
 
 URL = ENV["BROPAGES_URL"] || 'http://bropages.org'
 FILE = ENV["HOME"] + '/.bro'
+RestClient.proxy = ENV['http_proxy']
 
 program :name, 'bro'
 program :version, Bro::VERSION
