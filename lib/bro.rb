@@ -20,7 +20,8 @@ require_relative 'bro/state.rb'
 require_relative 'bro/bro_state.rb'
 require_relative 'bro/string_hacks.rb'
 require_relative 'bro/version.rb'
-include Bro
+
+#trap("SIGINT") { clean up; exit}
 
 URL = ENV["BROPAGES_URL"] || 'http://bropages.org'
 FILE = ENV["HOME"] + '/.bro'
@@ -41,9 +42,8 @@ command :thanks do |c|
   c.action do |args, options|
     begin
       login_details = state.check_email
-    rescue => e
+    rescue
       say "Sorry, you can't do this without email verification".sorry
-      say "#{e}"
     end
     unless login_details.nil?
       cmd = state.read_state[:cmd]
@@ -60,7 +60,7 @@ command :thanks do |c|
       id = state.read_state[idkey.intern]
 
       if id.nil?
-        say "That id (#{idkey}) does not exist for #{cmd}, try another one".sorry
+        say "That index (#{idkey}) does not exist for #{cmd}, try another one".sorry
       end
 
       unless id.nil?
@@ -141,9 +141,8 @@ command :add do |c|
   c.action do |args, options|
     begin
       login_details = state.check_email
-    rescue => e
+    rescue Interrupt, StandardError
       say "Sorry, you can't do this without email verification".sorry
-      say e
     end
 
     unless login_details.nil?
