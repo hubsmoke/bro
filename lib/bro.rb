@@ -164,7 +164,7 @@ command :add do |c|
           QQQ
         entry = ask_editor prompt
         if !entry.nil? && entry.gsub(prompt, '').strip.length > 0
-          if agree "Submit this entry for #{cmd}? [Yn] "
+          if agree("Submit this entry for #{cmd}? [y/n] ") { |q| q.default = "yes" }
             say "All right, sending your entry...".status
             begin
               RestClient.post URL + '/', login_details.merge({ :entry => { :cmd => cmd, :msg => entry}, :format => 'json', :multipart => true })
