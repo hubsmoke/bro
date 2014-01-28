@@ -1,7 +1,0 @@
-require 'spec_helper'
-
-describe "Basic examples" do
-  it "can be asked about a simple command" do
-    
-  end
-end
