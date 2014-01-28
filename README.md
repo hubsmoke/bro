@@ -1,6 +1,8 @@
 THE BRO IDEA
 =======
 
+[![Build Status](https://travis-ci.org/ben-biddington/bro.png?branch=examples)](https://travis-ci.org/ben-biddington/bro)
+
 `bro`
 
 It's more focused than `man` pages
