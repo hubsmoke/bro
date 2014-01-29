@@ -37,7 +37,7 @@ else
   VanillaText.apply
 end
 
-command :thanks do |c|
+yesblock = lambda { |c|
   c.syntax = 'bro thanks [COMMAND]'
   c.summary = 'Upvote an entry, bro'
   c.description = 'Upvote a bro entry. If called without a COMMAND argument, it will upvote the last thing you looked up with bro'
@@ -79,7 +79,10 @@ command :thanks do |c|
       end
     end
   end
-end
+}
+
+command :thanks, &yesblock
+command :ty, &yesblock
 
 noblock = lambda { |c|
   c.syntax = 'bro ...no [ID]'
