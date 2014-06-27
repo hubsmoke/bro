@@ -248,7 +248,7 @@ command :lookup do |c|
       error = false
       begin
         res = RestClient.get URL + '/' + cmd + '.json'
-      rescue
+      rescue RestClient::ResourceNotFound
         say <<-QQQ.unindent
         The #{cmd_display.colored.yellow} command isn't in our database.
         
@@ -258,6 +258,13 @@ command :lookup do |c|
         
         \t* Need help? Visit #{"http://bropages.org/help".colored.underline}
         
+        QQQ
+        error = true
+      rescue Exception => e
+        say <<-QQQ.unindent
+          
+          Sorry bro, we got the following error:
+          #{e.message}
         QQQ
         error = true
       end
