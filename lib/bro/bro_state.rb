@@ -47,6 +47,7 @@ module Bro
           email_param = CGI.escape(email)
           res = RestClient.post URL + '/users.json', { :user => { :email => email_param }, :format => 'json', :multipart => true }
         rescue => e
+          puts e.message
           say "There was an error delivering to your email address. Please try again later".colored.yellow.on_red
           raise e
         else
