@@ -286,33 +286,19 @@ command :lookup do |c|
             lines.each_with_index {|line, index|
               line.strip!
               unless line.length == 0
-                if /^s?#/.match(line)
-                  # Line starts with a hashtag
+                if starts_with_hashtag(line)
                   if index == 0
-                    # Consider it a header if it's the first line
-                    line = line.upcase.colored.yellow.sub /#\s?/, "#{i}. "
+                    line = line_header(line, i)
                     header_found = true
                   else
-                    # Otherwise, it's a comment
-                    line = "\t#{line.colored.green}"
+                    line = line_comment(line)
                   end
                 else
-                  # Line doesn't start with a hashtag
-                  if line.index cmd or line[0] == '$'
-                    # Line contains the search keyword, or starts with a $
-                    # Consider it a shell command
-                    if line[0] != '$'
-                      # If the line doesn't start with a $, add it
-                      line = "\t$ #{line}"
-                    else
-                      # Otherwise, just indent the line
-                      line = "\t#{line}"
-                    end
-                    # Highlight the search query
-                    line.gsub! cmd, cmd.important
+                  if contains_query(line, cmd) or starts_with_dollar(line)
+                    line = line_cmd(line, cmd, !starts_with_dollar(line))
                   else
                     # Last resort - assume it's a comment
-                    line = "\t# #{line}".colored.green
+                    line = line_comment(line)
                   end
                 end
               else
@@ -324,7 +310,7 @@ command :lookup do |c|
             }
 
             if !header_found
-              body.unshift "#{i}. UNTITLED".colored.yellow
+              body.unshift line_header("# Untitled", i)
             end
 
             puts "\n" + body.join("\n") + "\n"
@@ -333,4 +319,32 @@ command :lookup do |c|
       end
     end
   end
+end
+
+
+def contains_query(str, query)
+  return str.index query
+end
+
+def starts_with_dollar(str)
+  return /^\s?$/.match(str)
+end
+
+def starts_with_hashtag(str)
+  return /^\s?#/.match(str)
+end
+
+def line_comment(str)
+  return "\t# #{str.sub('#', '')}".colored.green
+end
+
+def line_cmd(str, highlight, prefix=false)
+  if prefix
+    str = "$ #{str}"
+  end
+  return "\t#{str}".gsub highlight, highlight.important
+end
+
+def line_header(str, i)
+  return str.upcase.colored.yellow.sub /#\s?/, "#{i}. "
 end
