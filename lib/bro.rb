@@ -276,15 +276,9 @@ command :lookup do |c|
 
         say <<-QQQ.unindent
         #{"#{list.length} entr#{s} for #{cmd_display}".status.underline} #{"-- submit your own example with \"bro add #{cmd_display}\"".colored.yellow}
-        
         QQQ
 
-        sep = ""
-        (HighLine::SystemExtensions.terminal_size[0] - 5).times { sep += "." }
-        sep += "\n"
-
         i = 0
-        isDefault = true
         list.each {|data|
             i += 1
 
@@ -292,27 +286,39 @@ command :lookup do |c|
             obj["#{i}"] = data['id']
             state.write_state(obj)
 
-            days = (DateTime.now - DateTime.parse(data['updated_at'])).ceil.to_i
+            lines = data['msg'].split("\n")
 
-            body = data['msg']
+            body = []
+            header_found = false
+            lines.each {|line|
+              line.strip!
+              unless line.length == 0
+                if /^s?#/.match(line)
+                  if !header_found
+                    line = line.upcase.colored.yellow.sub /#\s?/, "#{i}. "
+                    header_found = true
+                  else
+                    line = "\t#{line.colored.green}"
+                  end
+                elsif
+                  if line.index cmd or line[0] == '$'
+                    line = "\t$ #{line.gsub(cmd, cmd.important)}"
+                  else
+                    line = "\t# #{line}".colored.green
+                  end
+                end
+              else
+                line = ""
+              end
 
-            body = body.gsub(/^([^#][^\n]*)$/, "\\1".important)
+              body.push line
+            }
 
-            say sep + "\n" if i > 1
-
-            say body + "\n\n"
-
-            upstr = "bro thanks"
-            upstr += " #{i}" unless isDefault
-            downstr = "bro ...no"
-            downstr += " #{i}" unless isDefault
-
-            msg = "\t#{upstr.colored.green}\tto upvote (#{data['up']})\n\t#{downstr.colored.red}\tto downvote (#{data['down']})"
-            if days > 0
-              #msg += "\tlast updated\t#{days} days ago"
+            if !header_found
+              body.unshift "#{i}. UNTITLED".colored.yellow
             end
-            say msg + "\n\n"
-            isDefault = false
+
+            puts "\n" + body.join("\n") + "\n"
         }
 
       end
