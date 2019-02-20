@@ -2,25 +2,25 @@ PATH
   remote: .
   specs:
     bropages (0.1.0)
-      commander (= 4.1.5)
-      highline (= 1.6.20)
+      commander (= 4.4.7)
+      highline (~> 2.0.0)
       json_pure (= 1.8.1)
       mime-types (~> 1.19.0)
-      rest-client
+      rest-client (<= 1.7.0)
       smart_colored
 
 GEM
   remote: https://rubygems.org/
   specs:
-    commander (4.1.5)
-      highline (~> 1.6.11)
+    commander (4.4.7)
+      highline (~> 2.0.0)
     diff-lcs (1.2.5)
-    highline (1.6.20)
+    highline (2.0.1)
     json_pure (1.8.1)
     mime-types (1.19)
     rake (10.1.0)
-    rest-client (1.6.7)
-      mime-types (>= 1.16)
+    rest-client (1.6.9)
+      mime-types (~> 1.16)
     rspec (2.14.1)
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
@@ -38,3 +38,6 @@ DEPENDENCIES
   bropages!
   rake
   rspec
+
+BUNDLED WITH
+   1.17.3

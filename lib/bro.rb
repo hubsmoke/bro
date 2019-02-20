@@ -280,7 +280,7 @@ command :lookup do |c|
         QQQ
 
         sep = ""
-        (HighLine::SystemExtensions.terminal_size[0] - 5).times { sep += "." }
+        (HighLine.new.output_cols - 5).times { sep += "." }
         sep += "\n"
 
         i = 0
