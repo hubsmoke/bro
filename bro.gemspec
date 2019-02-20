@@ -20,6 +20,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'commander', '4.4.7'
   s.add_runtime_dependency 'rest-client', '<=1.7.0'
   s.add_runtime_dependency 'smart_colored'
-  s.add_runtime_dependency 'highline', '~> 2.0.0'
+  s.add_runtime_dependency 'highline', '~> 2.0.1'
   s.add_runtime_dependency 'mime-types', '~> 1.19.0'
 end

@@ -3,7 +3,7 @@ PATH
   specs:
     bropages (0.1.0)
       commander (= 4.4.7)
-      highline (~> 2.0.0)
+      highline (~> 2.0.1)
       json_pure (= 1.8.1)
       mime-types (~> 1.19.0)
       rest-client (<= 1.7.0)
