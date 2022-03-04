@@ -1,3 +1,8 @@
+# **DEPRECATED** - Use [tldr](https://github.com/tldr-pages/tldr) or [cheat](https://github.com/cheat/cheat) or [whatever works for you](https://github.com/tldr-pages/tldr#similar-projects)
+
+---
+
+
 [![Build Status](https://travis-ci.org/hubsmoke/bro.png)](https://travis-ci.org/hubsmoke/bro)
 
 THE BRO IDEA
