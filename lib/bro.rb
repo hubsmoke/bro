@@ -276,15 +276,9 @@ command :lookup do |c|
 
         say <<-QQQ.unindent
         #{"#{list.length} entr#{s} for #{cmd_display}".status.underline} #{"-- submit your own example with \"bro add #{cmd_display}\"".colored.yellow}
-        
         QQQ
 
-        sep = ""
-        (HighLine::SystemExtensions.terminal_size[0] - 5).times { sep += "." }
-        sep += "\n"
-
         i = 0
-        isDefault = true
         list.each {|data|
             i += 1
 
@@ -292,30 +286,72 @@ command :lookup do |c|
             obj["#{i}"] = data['id']
             state.write_state(obj)
 
-            days = (DateTime.now - DateTime.parse(data['updated_at'])).ceil.to_i
+            lines = data['msg'].split("\n")
 
-            body = data['msg']
+            body = []
+            header_found = false
+            lines.each_with_index {|line, index|
+              line.strip!
+              unless line.length == 0
+                if starts_with_hashtag(line)
+                  if index == 0
+                    line = line_header(line, i)
+                    header_found = true
+                  else
+                    line = line_comment(line)
+                  end
+                else
+                  if contains_query(line, cmd) or starts_with_dollar(line)
+                    line = line_cmd(line, cmd, !starts_with_dollar(line))
+                  else
+                    # Last resort - assume it's a comment
+                    line = line_comment(line)
+                  end
+                end
+              else
+                # Feed a new line
+                line = ""
+              end
 
-            body = body.gsub(/^([^#][^\n]*)$/, "\\1".important)
+              body.push line
+            }
 
-            say sep + "\n" if i > 1
-
-            say body + "\n\n"
-
-            upstr = "bro thanks"
-            upstr += " #{i}" unless isDefault
-            downstr = "bro ...no"
-            downstr += " #{i}" unless isDefault
-
-            msg = "\t#{upstr.colored.green}\tto upvote (#{data['up']})\n\t#{downstr.colored.red}\tto downvote (#{data['down']})"
-            if days > 0
-              #msg += "\tlast updated\t#{days} days ago"
+            if !header_found
+              body.unshift line_header("# Untitled", i)
             end
-            say msg + "\n\n"
-            isDefault = false
+
+            puts "\n" + body.join("\n") + "\n"
         }
 
       end
     end
   end
+end
+
+
+def contains_query(str, query)
+  return str.index query
+end
+
+def starts_with_dollar(str)
+  return /^\s?$/.match(str)
+end
+
+def starts_with_hashtag(str)
+  return /^\s?#/.match(str)
+end
+
+def line_comment(str)
+  return "\t# #{str.sub('#', '')}".colored.green
+end
+
+def line_cmd(str, highlight, prefix=false)
+  if prefix
+    str = "$ #{str}"
+  end
+  return "\t#{str}".gsub highlight, highlight.important
+end
+
+def line_header(str, i)
+  return str.upcase.colored.yellow.sub /#\s?/, "#{i}. "
 end
